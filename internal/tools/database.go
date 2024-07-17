@@ -1,0 +1,34 @@
+package tools
+
+import (
+	log "github.com/sirupsen/logrus"
+)
+
+// Database collections
+type LoginDetails struct {
+	AuthToken string
+	Username  string
+}
+
+type CoinDetails struct {
+	Username string
+	Coins    int64
+}
+
+type DatabaseInterface interface {
+	GetUserLoginDetails(username string) *LoginDetails
+	GetUserCoins(username string) *CoinDetails
+	SetupDatabase() error
+}
+
+func NewDatabase() (*DatabaseInterface, error) {
+	var database DatabaseInterface = &mockDB{}
+
+	err := database.SetupDatabase()
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	}
+
+	return &database, nil
+}
